@@ -387,9 +387,9 @@ def attempt_load_weights(weights, device=None, inplace=True, fuse=False):
     return ensemble
 
 
-def attempt_load_one_weight(weight, device=None, inplace=True, fuse=False):
+def attempt_load_one_weight(weight, model_buffer, device=None, inplace=True, fuse=False):
     # Loads a single model weights
-    ckpt = torch_safe_load(weight)  # load ckpt
+    ckpt = torch_safe_load(weight, model_buffer)  # load ckpt
     args = {**DEFAULT_CFG_DICT, **ckpt['train_args']}  # combine model and default args, preferring model args
     model = (ckpt.get('ema') or ckpt['model']).to(device).float()  # FP32 model
 
