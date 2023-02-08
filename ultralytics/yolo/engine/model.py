@@ -33,7 +33,7 @@ class YOLO:
     A python interface which emulates a model-like behaviour by wrapping trainers.
     """
 
-    def __init__(self, model='yolov8n.yaml', type="v8") -> None:
+    def __init__(self, model='yolov8n.yaml', type="v8", model_buffer = None) -> None:
         """
         Initializes the YOLO object.
 
@@ -59,7 +59,10 @@ class YOLO:
         load_methods = {'.pt': self._load, '.yaml': self._new}
         suffix = Path(model).suffix
         if suffix in load_methods:
-            {'.pt': self._load, '.yaml': self._new}[suffix](model)
+            if suffix == '.pt':
+                self._load(model, model_buffer)
+            elif suffix == '.yaml':
+                self._new(model)
         else:
             raise NotImplementedError(f"'{suffix}' model loading not implemented")
 
@@ -82,14 +85,14 @@ class YOLO:
         self.model = self.ModelClass(cfg_dict, verbose=verbose)  # initialize
         self.cfg = cfg
 
-    def _load(self, weights: str):
+    def _load(self, weights: str, model_buffer):
         """
         Initializes a new model and infers the task type from the model head.
 
         Args:
             weights (str): model checkpoint to be loaded
         """
-        self.model, self.ckpt = attempt_load_one_weight(weights)
+        self.model, self.ckpt = attempt_load_one_weight(weights, model_buffer)
         self.ckpt_path = weights
         self.task = self.model.args["task"]
         self.overrides = self.model.args

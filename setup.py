@@ -11,7 +11,8 @@ FILE = Path(__file__).resolve()
 PARENT = FILE.parent  # root directory
 README = (PARENT / "README.md").read_text(encoding="utf-8")
 REQUIREMENTS = [f'{x.name}{x.specifier}' for x in pkg.parse_requirements((PARENT / 'requirements.txt').read_text())]
-PKG_REQUIREMENTS = ['sentry_sdk']  # pip-only requirements
+# PKG_REQUIREMENTS = ['sentry_sdk']  # pip-only requirements
+PKG_REQUIREMENTS = []
 
 
 def get_version():
